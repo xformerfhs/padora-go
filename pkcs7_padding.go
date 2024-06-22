@@ -53,17 +53,25 @@ func Pad(unpaddedMessage []byte, blockSize int) []byte {
 // Unpad unpads a padded message.
 func Unpad(paddedMessage []byte, blockSize int) ([]byte, error) {
 	maxIndex := len(paddedMessage) - 1
+
+	// 1. Check padding.
+
+	// Get last byte.
 	lastByte := paddedMessage[maxIndex]
 	intLastByte := int(lastByte)
+
+	// Has last byte an invalid value?
 	if lastByte == 0 || intLastByte > blockSize {
 		return nil, ErrInvalidPadding
 	}
 
+	// Check if all expected padding bytes are present.
 	for i := maxIndex - 1; i > maxIndex-intLastByte; i-- {
 		if paddedMessage[i] != lastByte {
 			return nil, ErrInvalidPadding
 		}
 	}
 
+	// 2. Now unpad.
 	return paddedMessage[:maxIndex-intLastByte+1], nil
 }
