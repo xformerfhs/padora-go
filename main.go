@@ -59,11 +59,13 @@ func main() {
 
 	recoveredMessage, count := Crack(encryptedMessage, aesBlockSize)
 
+	fmt.Println()
 	if bytes.Compare(secretMessage, recoveredMessage) == 0 {
-		fmt.Println(`Secret message successfully retrieved!`)
+		fmt.Println(`>>>> Secret message successfully retrieved! <<<<`)
 	} else {
 		fmt.Println(`!!!! Unable to retrieve secret message!!!!`)
 	}
+	fmt.Println()
 	fmt.Printf("Needed %d decryption calls. This means %d calls per byte.\n", count, int(math.Round(float64(count)/float64(paddedLength))))
 
 	// Clear secret data from memory.
