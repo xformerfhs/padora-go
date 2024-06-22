@@ -48,6 +48,8 @@ func Crack(encryptedMessage []byte, blockSize int) ([]byte, int) {
 	copy(modifiedMessage, encryptedMessage)
 
 	// Loop through the message block by block, beginning at the last one.
+	// The first block (start: 0) is not cracked, as it is the initialization vector
+	// and not encrypted data.
 	for start := len(encryptedMessage) - blockSize; start >= blockSize; start -= blockSize {
 		var crackedBlock []byte
 		crackedBlock, count = crackBlock(encryptedMessage, modifiedMessage, blockSize, start, count)
