@@ -53,6 +53,7 @@ func Crack(encryptedMessage []byte, blockSize int) ([]byte, int) {
 		var crackedBlock []byte
 		crackedBlock, count = crackBlock(encryptedMessage, modifiedMessage, blockSize, start, count)
 		result = slicehelper.Concat(crackedBlock, result)
+		slicehelper.ClearNumber(crackedBlock)
 	}
 
 	result, _ = Unpad(result, blockSize)
