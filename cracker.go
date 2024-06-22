@@ -29,9 +29,8 @@
 // This file contains the cracker functions that perform a padding oracle attack
 // on data encrypted with AES-CBC and padded with PKCS#7.
 //
-// It implements a very simple version of Serge Vaudenay's padding oracle attack
-// (https://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf) just to show
-// how such an attack works in principle.
+// It implements a very simple version of a padding oracle attack,
+// just to show how such an attack works in principle.
 
 package main
 
