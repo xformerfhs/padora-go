@@ -83,7 +83,7 @@ But the attacker is only interested in whether there is a padding error, or not.
 
 The program that is presented here has been developed to show how such an attack is performed.
 It makes it possible to follow the exact steps needed for the attack.
-It is intended to further the understanding of the attack in order to make it possible to defend against it.
+It is meant to be used for educational purposes and intended to further the understanding of the attack in order to make it possible to defend against it.
 
 ## Learning
 
