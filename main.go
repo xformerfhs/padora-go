@@ -51,7 +51,9 @@ func main() {
 	fmt.Printf("Length of secret message is %d\n", len(secretMessage))
 
 	encryptedMessage := PadAndEncrypt(secretMessage, aesBlockSize)
-	fmt.Printf("Length of padded encrypted message is %d\n", len(encryptedMessage))
+	// Padded length is encrypted length minus initialization vector length.
+	paddedLength := len(encryptedMessage) - aesBlockSize
+	fmt.Printf("Length of padded encrypted message is %d\n", paddedLength)
 
 	recoveredMessage, count := Crack(encryptedMessage, aesBlockSize)
 
@@ -60,7 +62,7 @@ func main() {
 	} else {
 		fmt.Println(`Unable to retrieve secret message!`)
 	}
-	fmt.Printf("Needed %d decryption calls. This means %d calls per byte.\n", count, int(math.Round(float64(count)/float64(len(encryptedMessage)))))
+	fmt.Printf("Needed %d decryption calls. This means %d calls per byte.\n", count, int(math.Round(float64(count)/float64(paddedLength))))
 }
 
 // ******** private functions ********
