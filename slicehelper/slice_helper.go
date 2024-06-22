@@ -29,8 +29,6 @@
 // Package slicehelper implements helper functions for slices.
 package slicehelper
 
-import "padora/constraints"
-
 // ******** Private constants ********
 
 // powerFillThresholdLen is the slice length where PowerFill is more efficient than SimpleFill.
@@ -45,20 +43,6 @@ func Fill[S ~[]T, T any](s S, v T) {
 	if sLen > 0 {
 		doFill(s, v, sLen)
 	}
-}
-
-// FillToCap fills a slice with a value in an efficient way up to its capacity.
-func FillToCap[S ~[]T, T any](s S, v T) {
-	sLen := cap(s)
-
-	if sLen > 0 {
-		doFill(s[:sLen], v, sLen)
-	}
-}
-
-// ClearNumber clears a number type slice.
-func ClearNumber[S ~[]T, T constraints.Number](a S) {
-	FillToCap(a, 0)
 }
 
 // Concat returns a new slice concatenating the passed in slices.

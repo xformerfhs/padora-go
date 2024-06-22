@@ -36,7 +36,6 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	"padora/slicehelper"
 )
 
 // ******** Private constants ********
@@ -67,10 +66,6 @@ func main() {
 	}
 	fmt.Println()
 	fmt.Printf("Needed %d decryption calls. This means %d calls per byte.\n", count, int(math.Round(float64(count)/float64(paddedLength))))
-
-	// Clear secret data from memory.
-	slicehelper.ClearNumber(secretMessage)
-	slicehelper.ClearNumber(recoveredMessage)
 }
 
 // ******** private functions ********
