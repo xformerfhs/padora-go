@@ -36,6 +36,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"padora/slicehelper"
 )
 
 // ******** Private constants ********
@@ -51,6 +52,10 @@ func main() {
 	fmt.Printf("Length of secret message is %d\n", len(secretMessage))
 
 	encryptedMessage := PadAndEncrypt(secretMessage, aesBlockSize)
+
+	// Clear secret data from memory.
+	slicehelper.ClearNumber(secretMessage)
+
 	// Padded length is encrypted length minus initialization vector length.
 	paddedLength := len(encryptedMessage) - aesBlockSize
 	fmt.Printf("Length of padded encrypted message is %d\n", paddedLength)
@@ -63,6 +68,9 @@ func main() {
 		fmt.Println(`Unable to retrieve secret message!`)
 	}
 	fmt.Printf("Needed %d decryption calls. This means %d calls per byte.\n", count, int(math.Round(float64(count)/float64(paddedLength))))
+
+	// Clear secret data from memory.
+	slicehelper.ClearNumber(recoveredMessage)
 }
 
 // ******** private functions ********
