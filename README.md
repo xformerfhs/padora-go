@@ -76,7 +76,7 @@ The attack works by changing the data in the previous block so that the data in 
 The attacker generates a valid padding where no padding had been before.
 From the value that is needed to generate the valid padding the plain text data can be inferred.
 
-The maniplated data will not make sense any more to the receiving application.
+The manipulated data will not make sense any more to the receiving application.
 But the attacker is only interested in whether there is a padding error, or not.
 
 ## Intent
