@@ -94,7 +94,7 @@ If there is one thing that can be learned from this, it is that encryption must 
 - Always.
 - Even with arbitrary tail byte padding :-).
 
-One may use either ciphers that provide [authenticated encryption](https://en.wikipedia.org/wiki/Authenticated_encryption).
+Either, one may use ciphers that provide [authenticated encryption](https://en.wikipedia.org/wiki/Authenticated_encryption).
 Or, if one needs to use a classic mode like CBC, an explicit authentication with a [Message authentication code](https://en.wikipedia.org/wiki/Message_authentication_code) is mandatory.
 
 If authentication is used the padding method does not matter any more.
