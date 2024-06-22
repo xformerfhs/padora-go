@@ -18,7 +18,7 @@ It is very simple and by no means something that can be used in a real-world sce
 
 ## Technical background
 
-The [padding oracle attack](https://en.wikipedia.org/wiki/Padding_oracle_attack) on symmetric ciphers was first shown by Serge Vaudenay in [2002](https://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf) and improved by [John Black and Hector Urtubia](https://www.usenix.org/legacy/event/sec02/full_papers/black/black_html).
+The [padding oracle attack](https://en.wikipedia.org/wiki/Padding_oracle_attack) on symmetric ciphers was first shown by Serge Vaudenay in [2002](https://www.iacr.org/cryptodb/archive/2002/EUROCRYPT/2850/2850.pdf) and [improved](https://www.usenix.org/legacy/event/sec02/full_papers/black/black_html) by John Black and Hector Urtubia.
 It works in the so called [CBC mode](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#CBC) of [block ciphers](https://en.wikipedia.org/wiki/Block_cipher). 
 In addition to the CBC mode, also a highly-structured [padding](https://en.wikipedia.org/wiki/Padding_(cryptography)) is needed.
 
