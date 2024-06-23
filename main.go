@@ -68,7 +68,7 @@ func main() {
 	fmt.Printf("Needed %d decryption calls. This means %d calls per byte.\n", count, int(math.Round(float64(count)/float64(paddedLength))))
 }
 
-// ******** private functions ********
+// ******** Private functions ********
 
 // makeSecretMessage builds a random secret message.
 func makeSecretMessage(numBlocks int, blockSize int) []byte {
