@@ -24,6 +24,7 @@
 //
 // Change history:
 //    2024-06-21: V1.0.0: Created.
+//    2024-06-23: V1.1.0: Use a module global decryption buffer.
 //
 
 // This file contains the AES-CBC encryption and decryption functions.
@@ -81,13 +82,13 @@ func Decrypt(compoundEncryptedMessage []byte) []byte {
 
 	cbcCipher := cipher.NewCBCDecrypter(aesCipher, iv)
 
-	decryptedBytes := make([]byte, len(encryptedMessage))
+	decryptedBytes := getDecryptionBuffer(len(encryptedMessage))
 	cbcCipher.CryptBlocks(decryptedBytes, encryptedMessage)
 
 	return decryptedBytes
 }
 
-// ******** Public functions ********
+// ******** Private functions ********
 
 // getCipher returns the AES cipher and creates it, if it does not exist, yet.
 func getCipher() cipher.Block {
@@ -96,4 +97,17 @@ func getCipher() cipher.Block {
 	}
 
 	return modAesCipher
+}
+
+// decryptionBuffer is the buffer used for decryption.
+var decryptionBuffer []byte
+
+// getDecryptionBuffer returns the decryption buffer with a guaranteed minimum capacity.
+// This reduces the number of allocations needed for decryption.
+func getDecryptionBuffer(size int) []byte {
+	if cap(decryptionBuffer) < size {
+		decryptionBuffer = make([]byte, size)
+	}
+
+	return decryptionBuffer[:size]
 }

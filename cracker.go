@@ -34,13 +34,9 @@
 
 package main
 
-import (
-	"padora/slicehelper"
-)
-
 // Crack cracks an encrypted message with a CBC/PKCS#7 padding oracle.
 func Crack(encryptedMessage []byte, blockSize int) ([]byte, int) {
-	result := make([]byte, 0)
+	result := make([]byte, len(encryptedMessage)-blockSize)
 	count := 0
 
 	// Copy the encrypted message in a buffer that can be manipulated.
@@ -52,10 +48,28 @@ func Crack(encryptedMessage []byte, blockSize int) ([]byte, int) {
 	// 1. It is the first block and as such it does not have a previous block,
 	//    that can be manipulated,
 	// 2. It is the initialization vector and not encrypted data.
+	var previousMessageBlock []byte
+	var previousModifiedBlock []byte
+	crackedBlock := make([]byte, blockSize)
+	isLast := true
 	for start := len(encryptedMessage) - blockSize; start >= blockSize; start -= blockSize {
-		var crackedBlock []byte
-		crackedBlock, count = crackBlock(encryptedMessage, modifiedMessage, blockSize, start, count)
-		result = slicehelper.Concat(crackedBlock, result)
+		// Prepare two slices that each point to the block before the current block, as this
+		// is the one that is manipulated in this attack.
+		previousMessageBlock = encryptedMessage[start-blockSize : start]
+		previousModifiedBlock = modifiedMessage[start-blockSize : start]
+		count += crackBlock(modifiedMessage,
+			previousMessageBlock,
+			previousModifiedBlock,
+			crackedBlock,
+			blockSize,
+			start,
+			isLast)
+
+		copy(result[start-blockSize:], crackedBlock)
+
+		if isLast {
+			isLast = false
+		}
 	}
 
 	result, _ = Unpad(result, blockSize)
@@ -63,17 +77,17 @@ func Crack(encryptedMessage []byte, blockSize int) ([]byte, int) {
 }
 
 // crackBlock cracks one block.
-func crackBlock(encryptedMessage []byte, modifiedMessage []byte, blockSize int, start int, count int) ([]byte, int) {
-	result := make([]byte, blockSize)
-
-	// Prepare two slices that each point to the block before the current block, as this
-	// is the one that is manipulated in this attack.
-	previousMessageBlock := encryptedMessage[start-blockSize : start]
-	previousModifiedBlock := modifiedMessage[start-blockSize : start]
-
+func crackBlock(modifiedMessage []byte,
+	previousMessageBlock []byte,
+	previousModifiedBlock []byte,
+	crackedBlock []byte,
+	blockSize int,
+	start int,
+	isLast bool) int {
 	// Shorten the message so that the block we want to crack is the last block.
 	modifiedMessage = modifiedMessage[:start+blockSize]
 
+	count := 0
 	for pos := blockSize - 1; pos >= 0; pos-- {
 		// This is the padding value that is forced upon the end of the modified message.
 		wantedPaddingLength := byte(blockSize - pos)
@@ -83,7 +97,7 @@ func crackBlock(encryptedMessage []byte, modifiedMessage []byte, blockSize int, 
 		prepareKnownPadding(
 			previousMessageBlock,
 			previousModifiedBlock,
-			result,
+			crackedBlock,
 			pos,
 			blockSize,
 			wantedPaddingLength)
@@ -93,17 +107,18 @@ func crackBlock(encryptedMessage []byte, modifiedMessage []byte, blockSize int, 
 			modifiedMessage,
 			previousMessageBlock,
 			previousModifiedBlock,
-			result,
+			crackedBlock,
 			pos,
 			blockSize,
-			wantedPaddingLength)
+			wantedPaddingLength,
+			isLast)
 	}
 
 	// Restore previous modified block to contain the original data again.
 	// It is the next block to be attacked, so the original content is needed.
 	copy(previousModifiedBlock, previousMessageBlock)
 
-	return result, count
+	return count
 }
 
 // prepareKnownPadding sets the bytes following the current byte
@@ -111,13 +126,13 @@ func crackBlock(encryptedMessage []byte, modifiedMessage []byte, blockSize int, 
 func prepareKnownPadding(
 	previousMessageBlock []byte,
 	previousModifiedBlock []byte,
-	result []byte,
+	crackedBlock []byte,
 	pos int,
 	blockSize int,
 	wantedPaddingLength byte) {
 	for preparePos := pos + 1; preparePos < blockSize; preparePos++ {
 		previousModifiedBlock[preparePos] = previousMessageBlock[preparePos] ^
-			result[preparePos] ^
+			crackedBlock[preparePos] ^
 			wantedPaddingLength
 	}
 }
@@ -128,17 +143,18 @@ func guessValue(
 	modifiedMessage []byte,
 	previousMessageBlock []byte,
 	previousModifiedBlock []byte,
-	result []byte,
+	crackedBlock []byte,
 	pos int,
 	blockSize int,
-	wantedPaddingLength byte) int {
+	wantedPaddingLength byte,
+	isLast bool) int {
 	count := 0
 	foundValue := false
 	for guess := 0; guess < 256; guess++ {
 		guessByte := byte(guess)
-		// The following does not work if guessByte == wantedPaddingLength,
-		// so skip the guess in this case.
-		if guessByte == wantedPaddingLength {
+		// The following does not work if this is the last padded block and
+		// guessByte == wantedPaddingLength, so skip the guess in this case.
+		if isLast && (guessByte == wantedPaddingLength) {
 			continue
 		}
 
@@ -154,14 +170,14 @@ func guessValue(
 		if err == nil {
 			// There was no padding error. Strike!
 			foundValue = true
-			result[pos] = guessByte
+			crackedBlock[pos] = guessByte
 			break
 		}
 	}
 
 	// If the loop did not find a value, the correct value is wantedPaddingLength.
 	if !foundValue {
-		result[pos] = wantedPaddingLength
+		crackedBlock[pos] = wantedPaddingLength
 	}
 
 	return count

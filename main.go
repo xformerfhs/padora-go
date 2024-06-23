@@ -36,6 +36,8 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"padora/numberformat"
+	"time"
 )
 
 // ******** Private constants ********
@@ -47,25 +49,33 @@ const aesBlockSize = 16
 
 // main is the main program.
 func main() {
-	secretMessage := makeSecretMessage(3, aesBlockSize)
-	fmt.Printf("Length of secret message is %d\n", len(secretMessage))
+	numBlocks := GetNumBlocks()
+
+	secretMessage := makeSecretMessage(numBlocks, aesBlockSize)
+	fmt.Printf("\nLength of secret message is %s bytes\n", numberformat.FormatInt(len(secretMessage)))
 
 	encryptedMessage := PadAndEncrypt(secretMessage, aesBlockSize)
 
 	// Padded length is encrypted length minus initialization vector length.
 	paddedLength := len(encryptedMessage) - aesBlockSize
-	fmt.Printf("Length of padded encrypted message is %d\n", paddedLength)
+	fmt.Printf("Length of padded encrypted message is %s bytes\n", numberformat.FormatInt(paddedLength))
 
+	startTime := time.Now()
 	recoveredMessage, count := Crack(encryptedMessage, aesBlockSize)
+	elapsedTime := time.Since(startTime)
 
 	fmt.Println()
 	if bytes.Compare(secretMessage, recoveredMessage) == 0 {
 		fmt.Println(`>>>> Secret message successfully retrieved! <<<<`)
 	} else {
 		fmt.Println(`!!!! Unable to retrieve secret message!!!!`)
+		showDiff(secretMessage, recoveredMessage)
 	}
 	fmt.Println()
-	fmt.Printf("Needed %d decryption calls. This means %d calls per byte.\n", count, int(math.Round(float64(count)/float64(paddedLength))))
+	fmt.Printf("%s decryption calls needed %v. This means %d calls per byte.\n",
+		numberformat.FormatInt(count),
+		elapsedTime,
+		int(math.Round(float64(count)/float64(paddedLength))))
 }
 
 // ******** Private functions ********
@@ -75,4 +85,13 @@ func makeSecretMessage(numBlocks int, blockSize int) []byte {
 	result := make([]byte, numBlocks*blockSize-rand.Intn(blockSize))
 	_, _ = crand.Read(result)
 	return result
+}
+
+// showDiff shows the difference between two byte slices.
+func showDiff(a []byte, b []byte) {
+	for i := 0; i < len(a); i++ {
+		if a[i] != b[i] {
+			fmt.Printf("%d: %02x != %02x\n", i, a[i], b[i])
+		}
+	}
 }
