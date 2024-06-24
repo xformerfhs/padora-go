@@ -31,7 +31,7 @@ This is called "padding".
 
 ### Padding
 
-There is a plentitude of padding methods.
+There is a plenitude of padding methods.
 Some are very simple and some are highly structured.
 It is these highly structured padding methods that allow a padding oracle.
 
@@ -43,7 +43,7 @@ The final ingredient is a dedicated error from the recipient if the padding was 
 The name "padding oracle" reflects the fact that the attacker manipulates the encrypted bytes in a certain way and sends them to the receiver.
 If the receiver answers with a "wrong padding" error, if the padding is wrong, then the attack is possible.
 
-This resembles questioning an oracle: "Oh, receiver, does the encrypted data I sent you have a valid padding or not?".
+This resembles questioning an oracle: "Oh, receiver, does the encrypted data I sent you have a valid padding?".
 The answer (Yes: No padding error, No: Padding error) makes it possible to reconstruct the plain text.
 
 An explicit "wrong padding" return code or message is not even necessary.
