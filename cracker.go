@@ -51,7 +51,7 @@ func Crack(encryptedMessage []byte, blockSize int) ([]byte, int) {
 	var previousMessageBlock []byte
 	var previousModifiedBlock []byte
 	crackedBlock := make([]byte, blockSize)
-	isLast := true
+	isLastBlock := true
 	for start := len(encryptedMessage) - blockSize; start >= blockSize; start -= blockSize {
 		// Prepare two slices that each point to the block before the current block, as this
 		// is the one that is manipulated in this attack.
@@ -63,12 +63,12 @@ func Crack(encryptedMessage []byte, blockSize int) ([]byte, int) {
 			crackedBlock,
 			blockSize,
 			start,
-			isLast)
+			isLastBlock)
 
 		copy(result[start-blockSize:], crackedBlock)
 
-		if isLast {
-			isLast = false
+		if isLastBlock {
+			isLastBlock = false
 		}
 	}
 
@@ -83,7 +83,7 @@ func crackBlock(modifiedMessage []byte,
 	crackedBlock []byte,
 	blockSize int,
 	start int,
-	isLast bool) int {
+	isLastBlock bool) int {
 	// Shorten the message so that the block we want to crack is the last block.
 	modifiedMessage = modifiedMessage[:start+blockSize]
 
@@ -111,7 +111,7 @@ func crackBlock(modifiedMessage []byte,
 			pos,
 			blockSize,
 			wantedPaddingLength,
-			isLast)
+			isLastBlock)
 	}
 
 	// Restore previous modified block to contain the original data again.
@@ -147,14 +147,14 @@ func guessValue(
 	pos int,
 	blockSize int,
 	wantedPaddingLength byte,
-	isLast bool) int {
+	isLastBlock bool) int {
 	count := 0
 	foundValue := false
 	for guess := 0; guess < 256; guess++ {
 		guessByte := byte(guess)
 		// The following does not work if this is the last padded block and
 		// guessByte == wantedPaddingLength, so skip the guess in this case.
-		if isLast && (guessByte == wantedPaddingLength) {
+		if isLastBlock && (guessByte == wantedPaddingLength) {
 			continue
 		}
 
@@ -168,7 +168,23 @@ func guessValue(
 		count++
 		_, err := DecryptAndUnpad(modifiedMessage, blockSize)
 		if err == nil {
-			// There was no padding error. Strike!
+			// There was no padding error, so this is a candidate.
+			// However, sometimes this is a match that is caused by the byte before the current one.
+			// E.g., if we try to force a 0x01 in the last byte and the second-to-last byte
+			// is a 0x02 and our guess produces a 0x02, this is a valid padding, but not the intended one.
+			// Disturb the byte before current one to check, if the match still holds.
+			if pos > 0 {
+				previousModifiedBlock[pos-1] ^= 0xff
+				count++
+				_, err = DecryptAndUnpad(modifiedMessage, blockSize)
+				if err != nil {
+					// Disturbing the byte before this one gave a padding error.
+					// So this was an accidental match caused by the previous byte.
+					continue
+				}
+			}
+
+			// It was a real match!
 			foundValue = true
 			crackedBlock[pos] = guessByte
 			break
