@@ -172,7 +172,7 @@ func guessValue(
 			// However, sometimes this is a match that is caused by the byte before the current one.
 			// E.g., if we try to force a 0x01 in the last byte and the second-to-last byte
 			// is a 0x02 and our guess produces a 0x02, this is a valid padding, but not the intended one.
-			// Disturb the byte before current one to check, if the match still holds.
+			// Disturb the byte before the current one to check, if the match still holds.
 			if pos > 0 {
 				previousModifiedBlock[pos-1] ^= 0xff
 				count++
