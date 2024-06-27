@@ -97,10 +97,12 @@ If there is one thing that can be learned from this, it is that encryption must 
 Either, one may use ciphers that provide [authenticated encryption](https://en.wikipedia.org/wiki/Authenticated_encryption).
 Or, if one needs to use a classic mode like CBC, an explicit authentication with a [Message authentication code](https://en.wikipedia.org/wiki/Message_authentication_code) is mandatory.
 
-If authentication is used the padding method does not matter any more.
-One can use whatever method is the most convienent and/or fastest.
+If authentication is used the padding method does not matter anymore.
+In fact, authenticated encryptions do not even need padding, as they are [stream ciphers](https://en.wikipedia.org/wiki/Stream_cipher), built from block ciphers.
+
+If one uses a classic mode with an additional authentication, it does not matter which padding method is used.
 Even the vulnerable methods can be used.
-As long as any manipulation of the encrypted data can be detected, the vulnerability does not matter any more.
+As long as any manipulation of the encrypted data can be detected, the vulnerability does not matter anymore.
 
 ## Contact
 
