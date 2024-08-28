@@ -1,0 +1,8 @@
+The files were signed with the following signature information:
+
+Context id         : padora_1.0.1
+Public key id      : DX0X-RFCW-BPEC-1G9R-B26K-BMXK-QH
+Signature timestamp: 2024-08-28 11:18:09 +02:00
+Signature host name: Jetzt
+
+See https://github.com/xformerfhs/filesigner

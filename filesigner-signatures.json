@@ -1,0 +1,26 @@
+{
+   "format": 1,
+   "contextId": "padora_1.0.1",
+   "publicKey": "M3ThvcvdjVRhMGhSmrGs74cBdVQCBHhCzgCQm34ghRjmJDc4ZCDT",
+   "timestamp": "2024-08-28 11:18:09 +02:00",
+   "hostname": "Jetzt",
+   "signatureType": 1,
+   "fileSignatures": {
+      ".gitattributes": "bJsBzbvJGSTJdbZFgvZCGLzcjGsg3FVbszsCGGHc7SBzF3tjZrSTsJHbscCrbddbSfcMBrc3ddsbQFsCb4ttC4dJsJVhBBchCS74D7G",
+      ".gitignore": "cLgvdjQ9cJdJFS7R9dshCtR3jCLJRScRbChB3LLC9TGmHCTMmrRgGb9VhFJQL4D7V7QHZr4bBSrg7rfBTMGmdVSFtMrVLZBmj4GtG7h",
+      "LICENSE": "QzZMJ73r9FzG4v3d9dZhS34TRhvgJdGDMsFvhQtDvMGcGQShMLHJmTJC9FcbTzHQTHhSzDQgZLVhJr4DRCZTzcZQfLZjg3hVHrrMB3h",
+      "README.md": "mHr9VhGzzZ99crh3RH3vChMtVdsbm3v9Fcfv3jVMvJhz7ttCc4gbmSR9H3sTzZcLBG9LDHcdbcHCrtjh9hBDbtMDF3H4GztSvL4Hh7T",
+      "command_line.go": "fDGVVzQcLV9TdTzQVsgsGFgczrgVDHHTt7fdRHtQFjLHjGbCmvv3bvV7TfzzrhBjsLRzthMMcfMTdCzCmtzZsZ3HFC7Rj4dvTJsDh4T",
+      "constraints/constraints.go": "4VFtDvjSJL7C4FCbB7rJJmCVsDbhSc4Q7sztJsrdbz3RCgd7Gj7s3z9RMsdSFVgHrchd4STbzGvFr7brM7TSZQscFdgvcLGFTBLz73h",
+      "cracker.go": "vGhC9TRQ9bTb9ZFsDHvCJRs4bMFSFRsQghCGMsJ9BMJ4TfRfctTdQ3VhQVzzzSzFttzffHQsvTSvtzSG3H3ThCbQFLmHLMcShgGzG4h",
+      "encryption.go": "4CLbb9GFrCmQrz9Zrb3B4bmCTzZsbrs97Gjmrc9Rfs7rVhzMcLfRHsLBdJRcTGb9JHMBBRRRLDMzRrJFLRRvLsMctgb9J3MGzR4LD4G",
+      "go.mod": "QMT9tMT9GsMbLHTgD4DFLzt7CdmhjF3mmGjQgzZmzsTmLQ9MMtfRbQmDbStLFRVhtRJHLRDszV4FVvRjfzRT7msZh9zJgLz3JMsQJ7T",
+      "main.go": "mfsfvZGBBZt4JsMZfJ34bmSccfjsLFLzRvHzD373ZrHvMZvH9THg9TjBtBHgfJHG3mQcgmf9GBtt7tfsmHvSsBLDfmGjDgdMGzcdB7h",
+      "numberformat/number_formatter.go": "7GSTbhtCCZLSQTfrHTzFBdQ9tVg9GT34ZVShMHmCHvDSStdMz9HDstMbT9fBrfrzZtSVCLFS9vrgv9RgDrrLMcmJmsMBZffJDrzJs4T",
+      "padded_encryption.go": "mczbvhTTj9QFhCb3mbL3rZfvdjZdMcFjB47DgfM4TTm7Gc3hFZhrcLzTGGDzmdhvGDvJ9DFZQQsvFVsfBZzcJtSRsjmZgSmzbsLCT4G",
+      "padora.exe": "trvtLrfmCZRmLcQZJjgDjBjhC4hGZHS73vFg4dJgcTJQtbbDsVVz7T4hF3rFcGQMcDVLCmDC3JMhbjrFTbQ9mr7jtSsRfFQcjMBTT3G",
+      "pkcs7_padding.go": "s9jtGSDTVF3FV4hdFHCCmR7T3DbFggjfjg7dtdtzFScDJDmgTLjjzddvQVTRRMDVJF3r9SgBtTztg9Q9f9ZR7JVdVcvdjbfbGmJss33",
+      "slicehelper/slice_helper.go": "H7dZrz3DbsMVTzzdgtSfcZvC9VcvMsc9vtF9vQjCRzDbtFfhmSRsGCQVj9Q4RgcgTRGCdHF7MmJ7bmcdDscGfVcjch3BmtG3Vt7hZ3h"
+   },
+   "dataSignature": "LCJZ4rfQJCHztrL393M7CsG9SBmtQFmJfVzBFtzTCvC9FVMMHjD7bsJJvZVHQDzTVm4VtzfC9bD4tCDtVv73JHF4rLtGctFZGzFJ793"
+}
