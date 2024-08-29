@@ -24,6 +24,7 @@
 //
 // Change history:
 //    2024-06-21: V1.0.0: Created.
+//    2024-08-29: V1.1.0: Show progress information.
 //
 
 // This is the main program of the padding oracle demonstration.

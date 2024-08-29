@@ -20,11 +20,12 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.1
+// Version: 1.1.0
 //
 // Change history:
 //    2024-06-21: V1.0.0: Created.
 //    2024-08-28: V1.0.1: Rename variable to better reflect its meaning.
+//    2024-08-29: V1.1.0: Show progress information.
 //
 
 // This file contains the cracker functions that perform a padding oracle attack
@@ -35,12 +36,26 @@
 
 package main
 
-import "slices"
+import (
+	"fmt"
+	"padora/numberformat"
+	"slices"
+)
+
+// ======== Private constants ========
+
+// progressStep is the size of step for reporting progress.
+const progressStep = 100_000
+
+// ======== Public function ========
 
 // Crack cracks an encrypted message with a CBC/PKCS#7 padding oracle.
 func Crack(encryptedMessage []byte, blockSize int) ([]byte, int) {
 	result := make([]byte, len(encryptedMessage)-blockSize)
 	count := 0
+	nextCountShow := progressStep
+
+	fmt.Println()
 
 	// Clone the encrypted message into a buffer that can be manipulated.
 	modifiedMessage := slices.Clone(encryptedMessage)
@@ -72,9 +87,15 @@ func Crack(encryptedMessage []byte, blockSize int) ([]byte, int) {
 		if isLastBlock {
 			isLastBlock = false
 		}
+
+		if count >= nextCountShow {
+			fmt.Printf("Guess count: %9s\n", numberformat.FormatInt(count))
+			nextCountShow += progressStep
+		}
 	}
 
 	result, _ = Unpad(result, blockSize)
+
 	return result, count
 }
 
@@ -167,8 +188,9 @@ func guessValue(
 			guessByte ^
 			wantedPaddingLength
 
-		// Now ask the oracle: Did we construct a valid padding?
 		count++
+
+		// Now ask the oracle: Did we construct a valid padding?
 		_, err := DecryptAndUnpad(modifiedMessage, blockSize)
 		if err == nil {
 			// There was no padding error, so this is a candidate.

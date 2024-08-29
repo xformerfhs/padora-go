@@ -19,10 +19,11 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 1.1.0
 //
 // Change history:
 //    2024-06-23: V1.0.0: Created.
+//    2024-08-29: V1.1.0: Print used number of blocks.
 //
 
 // This file contains the functions to process the command line arguments.
@@ -32,6 +33,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"padora/numberformat"
 	"strconv"
 )
 
@@ -55,25 +57,30 @@ const maxNumBlocks = 4_000
 func GetNumBlocks() int {
 	var err error
 
+	fmt.Println()
+
 	numBlocks := defaultNumBlocks
 
 	if len(os.Args) > 1 {
 		numBlocks, err = strconv.Atoi(os.Args[1])
 
 		if err != nil {
-			fmt.Printf(errMsgInvalidNoOfBlocks, numBlocks)
+			_, _ = fmt.Fprintf(os.Stderr, errMsgInvalidNoOfBlocks, numBlocks)
 			numBlocks = defaultNumBlocks
 		}
 
 		if numBlocks < minNumBlocks {
-			fmt.Printf(errMsgInvalidNoOfBlocks, numBlocks)
+			_, _ = fmt.Fprintf(os.Stderr, errMsgInvalidNoOfBlocks, numBlocks)
 			numBlocks = minNumBlocks
 		}
 
 		if numBlocks > maxNumBlocks {
-			fmt.Printf(errMsgInvalidNoOfBlocks, numBlocks)
+			_, _ = fmt.Fprintf(os.Stderr, errMsgInvalidNoOfBlocks, numBlocks)
 			numBlocks = maxNumBlocks
 		}
 	}
+
+	fmt.Printf("Using %s blocks\n", numberformat.FormatInt(numBlocks))
+
 	return numBlocks
 }
