@@ -50,21 +50,28 @@ const aesBlockSize = 16
 
 // main is the main program.
 func main() {
+	// 1. Get number of blocks from command line.
 	numBlocks := GetNumBlocks()
 
+	// 2. Generate a secret message with has a length about the number of blocks.
 	secretMessage := makeSecretMessage(numBlocks, aesBlockSize)
 	fmt.Printf("\nLength of secret message is %s bytes\n", numberformat.FormatInt(len(secretMessage)))
 
+	// 3. Encrypt the secret message.
+	//    Note, that the key is *not* known to the main program!
 	encryptedMessage := PadAndEncrypt(secretMessage, aesBlockSize)
 
 	// Padded length is encrypted length minus initialization vector length.
 	paddedLength := len(encryptedMessage) - aesBlockSize
 	fmt.Printf("Length of padded encrypted message is %s bytes\n", numberformat.FormatInt(paddedLength))
 
+	// 4. Crack the message with a padding oracle.
+	//    Note that the cracker does *not* know the key!
 	startTime := time.Now()
 	recoveredMessage, count := Crack(encryptedMessage, aesBlockSize)
 	elapsedTime := time.Since(startTime)
 
+	// 5. Check if the message has successfully been cracked.
 	fmt.Println()
 	if bytes.Compare(secretMessage, recoveredMessage) == 0 {
 		fmt.Println(`>>>> Secret message successfully retrieved! <<<<`)
@@ -72,6 +79,8 @@ func main() {
 		fmt.Println(`!!!! Unable to retrieve secret message!!!!`)
 		showDiff(secretMessage, recoveredMessage)
 	}
+
+	// 6. Show some statistics.
 	fmt.Println()
 	fmt.Printf("%s decryption calls needed %v. This means %d calls per byte.\n",
 		numberformat.FormatInt(count),
