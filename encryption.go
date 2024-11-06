@@ -20,11 +20,12 @@
 //
 // Author: Frank Schwab
 //
-// Version: 1.0.0
+// Version: 1.1.1
 //
 // Change history:
 //    2024-06-21: V1.0.0: Created.
 //    2024-06-23: V1.1.0: Use a module global decryption buffer.
+//    2024-11-06: V1.1.1: Generate key randomly.
 //
 
 // This file contains the AES-CBC encryption and decryption functions.
@@ -37,18 +38,6 @@ import (
 	"crypto/rand"
 	"padora/slicehelper"
 )
-
-// ******** Private constants ********
-
-// key is the encryption key.
-// This is only a simple demonstration program.
-// NEVER hard-code a key in production systems.
-var key = []byte{
-	0xe4, 0x15, 0x03, 0xed,
-	0x35, 0xe0, 0x43, 0x65,
-	0xe5, 0xbd, 0xf1, 0x36,
-	0x2c, 0x72, 0x54, 0x3f,
-}
 
 // ******** Private variables ********
 
@@ -93,7 +82,12 @@ func Decrypt(compoundEncryptedMessage []byte) []byte {
 // getCipher returns the AES cipher and creates it, if it does not exist, yet.
 func getCipher() cipher.Block {
 	if modAesCipher == nil {
+		// The key is randomly generated.
+		// It is saved nowhere.
+		key := make([]byte, 16)
+		_, _ = rand.Read(key)
 		modAesCipher, _ = aes.NewCipher(key)
+		slicehelper.Fill(key, 0)
 	}
 
 	return modAesCipher
